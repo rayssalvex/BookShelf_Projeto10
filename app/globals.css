@@ -1,26 +1,30 @@
+/* Importa as funcionalidades base do Tailwind */
 @import "tailwindcss";
 
+/* Define as variáveis de cor globais da aplicação
+  usando a sua nova paleta personalizada.
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a192f;   /* Azul super escuro para o fundo */
+  --foreground: #d1d5db;   /* Cinza claro para o texto principal */
+  
+  --card-bg: #1e3a5f;      /* Azul escuro para o fundo de cards, navbar, footer */
+  --border: #5a5c92;       /* Roxo/Azulado para bordas e separadores */
+  
+  --primary: #a89dff;      /* Lavanda para links e destaques principais */
+  --primary-hover: #f5c5f5; /* Rosa claro para o efeito hover nos links */
+
+  --secondary-text: #9ca3af; /* Cinza médio para textos secundários */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Aplica as variáveis de cor base ao corpo da página.
+*/
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  * {
+    border-color: var(--border);
+  }
 }
