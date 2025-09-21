@@ -6,10 +6,26 @@ import Link from "next/link";
 import { Star } from "lucide-react";
 import { useState } from "react";
 
-export default function CardBook() {
+type CardBookProps = {
+  searchTerm: string;
+};
+
+export default function CardBook({ searchTerm }: CardBookProps) {
+  const filteredBooks = mockBooks.filter((book) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      book.title.toLowerCase().includes(term) ||
+      book.author.toLowerCase().includes(term) ||
+      book.genre.toLowerCase().includes(term) ||
+      book.year.toString().includes(term) ||
+      book.pages?.toString().includes(term) ||
+      book.synopsis?.toLowerCase().includes(term)
+    );
+  });
+
   return (
-    <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-      {mockBooks.map((book) => (
+    <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {filteredBooks.map((book) => (
         <Card key={book.id} book={book} />
       ))}
     </div>
@@ -40,7 +56,7 @@ function Card({ book }: { book: (typeof mockBooks)[0] }) {
         <h2 className="font-bold text-lg">{book.title}</h2>
         <div className="flex justify-between items-center">
           <p className="text-sm text-gray-600">{book.author}</p>
-          <p className="text-xs text-gray-500">{book.year}</p>
+          <p className="text-xs text-gray-500">Ano: {book.year}</p>
         </div>
 
         <div className="flex justify-between items-center">
@@ -57,23 +73,28 @@ function Card({ book }: { book: (typeof mockBooks)[0] }) {
               />
             ))}
           </div>
-                    <p className="text-xs text-gray-500">Pags.: {book.pages}</p>
+          <p className="text-xs text-gray-500">Pags.: {book.pages}</p>
         </div>
 
-         <span className="inline-block w-fit px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">
-
-            {book.genre}
-          </span>
+        <span className="inline-block w-fit px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">
+          {book.genre}
+        </span>
       </div>
 
       <div
         className="flex justify-around border-t p-2"
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="text-sm px-3 py-1 rounded-md bg-yellow-600 text-white hover:bg-yellow-700 cursor-default">
+        <button className="text-xs px-3 py-1 rounded-md bg-blue-600 text-white hover:bg-blue-800 cursor-default">
+          Lido
+        </button>
+        <button className="text-xs px-3 py-1 rounded-md bg-green-600 text-white hover:bg-green-800 cursor-default">
+          Lendo
+        </button>
+        <button className="text-xs px-3 py-1 rounded-md bg-yellow-600 text-white hover:bg-yellow-700 cursor-default">
           Editar
         </button>
-        <button className="text-sm px-3 py-1 rounded-md bg-red-600 text-white hover:bg-red-700 cursor-default">
+        <button className="text-xs px-3 py-1 rounded-md bg-red-600 text-white hover:bg-red-700 cursor-default">
           Excluir
         </button>
       </div>

@@ -9,7 +9,11 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function BookDetailsPage({ params }: { params: { id: string } }) {
+export default function BookDetailsPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const book = mockBooks.find((b) => b.id === params.id);
 
   if (!book) {
@@ -18,9 +22,8 @@ export default function BookDetailsPage({ params }: { params: { id: string } }) 
 
   return (
     <div className="flex flex-col md:flex-row gap-8 p-6">
-
       <div className="md:w-1/3">
-        <Image 
+        <Image
           src={book.coverUrl}
           alt={`Capa de ${book.title}`}
           width={400}
@@ -34,9 +37,15 @@ export default function BookDetailsPage({ params }: { params: { id: string } }) 
         <h2 className="text-2xl text-gray-300">{book.author}</h2>
 
         <div className="flex gap-4 text-sm text-gray-500">
-          <span><strong>Ano:</strong> {book.year}</span>
-          <span><strong>Gênero:</strong> {book.genre}</span>
-          <span><strong>Páginas:</strong> {book.pages}</span>
+          <span>
+            <strong>Ano:</strong> {book.year}
+          </span>
+          <span>
+            <strong>Gênero:</strong> {book.genre}
+          </span>
+          <span>
+            <strong>Páginas:</strong> {book.pages}
+          </span>
         </div>
 
         <div className="flex gap-1">
@@ -56,6 +65,21 @@ export default function BookDetailsPage({ params }: { params: { id: string } }) 
         <div className="prose max-w-none text-white">
           <h3 className="text-lg font-semibold mt-4">Sinopse</h3>
           <p>{book.synopsis}</p>
+        </div>
+
+        <div className="flex gap-3">
+          <button className="text-sm px-3 py-1 rounded-md bg-blue-600 text-white hover:bg-blue-800 cursor-default">
+            Lido
+          </button>
+          <button className="text-sm px-3 py-1 rounded-md bg-green-600 text-white hover:bg-green-800 cursor-default">
+            Lendo
+          </button>
+          <button className="text-sm px-3 py-1 rounded-md bg-yellow-600 text-white hover:bg-yellow-700 cursor-default">
+            Editar
+          </button>
+          <button className="text-sm px-3 py-1 rounded-md bg-red-600 text-white hover:bg-red-700 cursor-default">
+            Excluir
+          </button>
         </div>
       </div>
     </div>
