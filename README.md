@@ -52,15 +52,6 @@ O sistema inicia com **5 livros pré-cadastrados** contendo:
 
 ---
 
-## 💡 Dicas de Desenvolvimento
-- Comece pelas funcionalidades básicas.  
-- Teste em diferentes dispositivos e resoluções.  
-- Use bem o sistema de tipos do **TypeScript**.  
-- Mantenha consistência visual com **shadcn/ui** e **Tailwind**.  
-- Trate erros e forneça feedback claro ao usuário.  
-
----
-
 ## 📚 Recursos Recomendados
 - [Next.js 15 Docs](https://nextjs.org/docs)  
 - [shadcn/ui Docs](https://ui.shadcn.com)  
