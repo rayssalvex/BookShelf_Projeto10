@@ -24,7 +24,6 @@ function Card({ book }: { book: (typeof mockBooks)[0] }) {
       href={`/livro/${book.id}`}
       className="rounded-2xl shadow-md border overflow-hidden flex flex-col hover:shadow-lg transition"
     >
-      {/* Capa */}
       <div className="relative w-full h-52 flex items-center justify-center">
         <Image
           src={
@@ -37,7 +36,6 @@ function Card({ book }: { book: (typeof mockBooks)[0] }) {
         />
       </div>
 
-      {/* Conteúdo */}
       <div className="p-4 flex flex-col gap-2 flex-1">
         <h2 className="font-bold text-lg">{book.title}</h2>
         <div className="flex justify-between items-center">
@@ -59,11 +57,13 @@ function Card({ book }: { book: (typeof mockBooks)[0] }) {
               />
             ))}
           </div>
+                    <p className="text-xs text-gray-500">Pags.: {book.pages}</p>
+        </div>
 
-          <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">
+         <span className="inline-block w-fit px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">
+
             {book.genre}
           </span>
-        </div>
       </div>
 
       <div
