@@ -1,9 +1,8 @@
-// app/livro/[id]/page.tsx
 import { mockBooks } from "@/data/mockBooks";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { Star } from "lucide-react";
 
-// Esta função ajuda o Next.js a gerar as páginas estaticamente no momento da build
 export async function generateStaticParams() {
   return mockBooks.map((book) => ({
     id: book.id,
@@ -11,35 +10,52 @@ export async function generateStaticParams() {
 }
 
 export default function BookDetailsPage({ params }: { params: { id: string } }) {
-  // Encontra o livro com base no ID da URL
   const book = mockBooks.find((b) => b.id === params.id);
 
-  // Se o livro não for encontrado, mostra uma página 404
   if (!book) {
     notFound();
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-8">
+    <div className="flex flex-col md:flex-row gap-8 p-6">
+
       <div className="md:w-1/3">
         <Image 
           src={book.coverUrl}
           alt={`Capa de ${book.title}`}
           width={400}
           height={600}
-          className="rounded-lg shadow-lg w-full"
+          className="rounded-lg shadow-lg w-full object-contain"
         />
       </div>
-      <div className="md:w-2/3">
-        <h1 className="text-4xl font-bold mb-2">{book.title}</h1>
-        <h2 className="text-2xl text-gray-600 mb-6">{book.author}</h2>
-        
-        <div className="prose max-w-none">
-          <p>
-            Aqui virá a sinopse e todo o conteúdo de leitura do livro... 
-            Por enquanto, estamos exibindo os detalhes básicos do livro com ID: <strong>{params.id}</strong>
-          </p>
-          {/* Futuramente, mais detalhes serão adicionados aqui */}
+
+      <div className="md:w-2/3 flex flex-col gap-4">
+        <h1 className="text-4xl font-bold">{book.title}</h1>
+        <h2 className="text-2xl text-gray-300">{book.author}</h2>
+
+        <div className="flex gap-4 text-sm text-gray-500">
+          <span><strong>Ano:</strong> {book.year}</span>
+          <span><strong>Gênero:</strong> {book.genre}</span>
+          <span><strong>Páginas:</strong> {book.pages}</span>
+        </div>
+
+        <div className="flex gap-1">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Star
+              key={i}
+              size={20}
+              className={
+                i < (book.rating ?? 0)
+                  ? "text-yellow-500 fill-yellow-500"
+                  : "text-gray-300"
+              }
+            />
+          ))}
+        </div>
+
+        <div className="prose max-w-none text-white">
+          <h3 className="text-lg font-semibold mt-4">Sinopse</h3>
+          <p>{book.synopsis}</p>
         </div>
       </div>
     </div>
