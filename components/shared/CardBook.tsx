@@ -36,14 +36,12 @@ function Card({
           status === "quero ler"
             ? "border bg-[#f1dc1c1f] border-orange-500"
             : ""
-        }
-      `}
+        }`}
     >
       <Link href={`/livro/${book.id}`}>
         <div
-          className={`relative w-full h-70 flex items-center justify-center hover:opacity-50 ${
-            status === "lido" ? "opacity-50" : ""
-          }`}
+          className={`relative w-full h-70 flex items-center justify-center hover:opacity-50 
+            ${status === "lido" ? "opacity-50" : ""}`}
         >
           <Image
             src={
@@ -77,7 +75,7 @@ function Card({
               />
             ))}
           </div>
-          <p className="text-xs text-gray-500">Pags.: {book.pages}</p>
+          <p className="text-xs text-gray-500">Págs.: {book.pages}</p>
         </div>
 
         <span className="inline-block w-fit px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">
@@ -117,6 +115,14 @@ function Card({
             </button>
           </div>
           <div className="flex gap-2">
+            <Link
+              href={`/livro/${book.id}`}
+              className="text-xs px-3 py-1 rounded-md cursor-pointer"
+              title="Visualizar"
+            >
+              ➕
+            </Link>
+
             <button className="text-xs px-3 py-1 rounded-md bg-purple-600 text-white hover:bg-purple-800 cursor-pointer">
               Editar
             </button>
