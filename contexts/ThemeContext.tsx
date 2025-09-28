@@ -2,66 +2,76 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "light" | "dark";
+type Theme = "light" | "dark" | "system";
 
 interface ThemeContextType {
-  theme: Theme;
-  toggleTheme: () => void;
+  theme: Theme; // light | dark | system
+  resolvedTheme: "light" | "dark"; // tema efetivo
   setTheme: (theme: Theme) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("system");
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
   const [mounted, setMounted] = useState(false);
 
-  // Carregar tema inicial
+  // Detecta e aplica o tema efetivo
   useEffect(() => {
+    let savedTheme: Theme = "system";
     try {
-      const savedTheme = localStorage.getItem("bookshelf-theme") as Theme;
-      if (savedTheme === "light" || savedTheme === "dark") {
-        setThemeState(savedTheme);
-      } else {
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        setThemeState(prefersDark ? "dark" : "light");
+      const local = localStorage.getItem("bookshelf-theme") as Theme;
+      if (local === "light" || local === "dark" || local === "system") {
+        savedTheme = local;
       }
-    } catch (error) {
-      console.error("Erro ao carregar tema:", error);
-    }
+    } catch {}
+    setTheme(savedTheme);
     setMounted(true);
   }, []);
 
-  // Aplicar tema no <html>
+  // Atualiza resolvedTheme e <html> ao mudar theme ou sistema
   useEffect(() => {
     if (!mounted) return;
-
     const root = document.documentElement;
+    let effective: "light" | "dark" = "light";
+    if (theme === "system") {
+      effective = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    } else {
+      effective = theme;
+    }
+    setResolvedTheme(effective);
     root.classList.remove("light", "dark");
-    root.classList.add(theme);
-
+    root.classList.add(effective);
     try {
       localStorage.setItem("bookshelf-theme", theme);
-    } catch (error) {
-      console.error("Erro ao salvar tema:", error);
-    }
+    } catch {}
+
+    // Listener para mudanças do SO
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = () => {
+      if (theme === "system") {
+        const sys = mq.matches ? "dark" : "light";
+        setResolvedTheme(sys);
+        root.classList.remove("light", "dark");
+        root.classList.add(sys);
+      }
+    };
+    mq.addEventListener("change", handleChange);
+    return () => mq.removeEventListener("change", handleChange);
   }, [theme, mounted]);
 
-  const toggleTheme = () => {
-    setThemeState((prev) => (prev === "light" ? "dark" : "light"));
+  const contextValue: ThemeContextType = {
+    theme,
+    resolvedTheme,
+    setTheme,
   };
-
-  const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
-  };
-
-  if (!mounted) {
-    return null; // evita flicker e hydration mismatch
-  }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
-      {children}
+    <ThemeContext.Provider value={contextValue}>
+      <div style={!mounted ? { visibility: "hidden" } : undefined}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 }

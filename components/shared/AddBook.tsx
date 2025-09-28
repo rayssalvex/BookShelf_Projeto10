@@ -263,12 +263,12 @@ export default function AddBook() {
 
         {/* Gênero */}
         <div>
-          <label className="block font-medium">Gênero</label>
+          <label className="block font-medium text-[var(--foreground)]">Gênero</label>
           <input
             name="genero"
             value={formData.genero}
             onChange={handleChange}
-            className="w-full border rounded p-2"
+            className="w-full border rounded p-2 bg-[var(--card-bg)] text-[var(--foreground)] placeholder-[var(--secondary-text)] border-[var(--border)] focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
           />
         </div>
 

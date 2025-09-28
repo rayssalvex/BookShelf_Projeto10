@@ -61,21 +61,21 @@ export default function FilterSortControls({
   const hasActiveFilters = filters.genre || filters.status || filters.rating;
 
   return (
-    <div className="bg-gray-800 rounded-lg p-4 mb-6 border border-gray-700">
+  <div className="bg-[var(--card-bg)] rounded-lg p-4 mb-6 border border-[var(--border)]">
       <div className="flex flex-wrap items-center gap-4 justify-between">
         {/* Botão de Filtros */}
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-            showFilters || hasActiveFilters
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-          }`}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors
+            ${showFilters || hasActiveFilters
+              ? 'bg-[var(--primary)] text-white'
+              : 'bg-[var(--card-bg)] text-[var(--secondary-text)] hover:bg-[var(--primary-hover)] hover:text-[var(--foreground)]'}
+          `}
         >
           <Filter className="h-4 w-4" />
           Filtros
           {hasActiveFilters && (
-            <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+            <span className="bg-[var(--primary)] text-white text-xs px-2 py-1 rounded-full">
               {[filters.genre, filters.status, filters.rating].filter(Boolean).length}
             </span>
           )}
@@ -84,11 +84,11 @@ export default function FilterSortControls({
 
         {/* Controles de Ordenação */}
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-400">Ordenar por:</span>
+          <span className="text-sm text-[var(--secondary-text)]">Ordenar por:</span>
           <select
             value={sort.field}
             onChange={(e) => setSort({ ...sort, field: e.target.value as SortOptions['field'] })}
-            className="bg-gray-700 text-white px-3 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="bg-[var(--card-bg)] text-[var(--foreground)] px-3 py-2 rounded-lg border border-[var(--border)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
           >
             {sortOptions.map(option => (
               <option key={option.value} value={option.value}>
@@ -98,7 +98,7 @@ export default function FilterSortControls({
           </select>
           <button
             onClick={() => setSort({ ...sort, direction: sort.direction === 'asc' ? 'desc' : 'asc' })}
-            className="p-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors"
+            className="p-2 bg-[var(--card-bg)] text-[var(--secondary-text)] rounded-lg hover:bg-[var(--primary-hover)] hover:text-[var(--foreground)] transition-colors"
             title={sort.direction === 'asc' ? 'Crescente' : 'Decrescente'}
           >
             {sort.direction === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
@@ -118,17 +118,17 @@ export default function FilterSortControls({
 
       {/* Painel de Filtros Expandido */}
       {showFilters && (
-        <div className="mt-4 pt-4 border-t border-gray-700">
+  <div className="mt-4 pt-4 border-t border-[var(--border)]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Filtro por Gênero */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                 Gênero
               </label>
               <select
                 value={filters.genre}
                 onChange={(e) => setFilters({ ...filters, genre: e.target.value })}
-                className="w-full bg-gray-700 text-white px-3 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-[var(--card-bg)] text-[var(--foreground)] px-3 py-2 rounded-lg border border-[var(--border)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
               >
                 <option value="">Todos os gêneros</option>
                 {availableGenres.map(genre => (
@@ -141,13 +141,13 @@ export default function FilterSortControls({
 
             {/* Filtro por Status */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                 Status de Leitura
               </label>
               <select
                 value={filters.status}
                 onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                className="w-full bg-gray-700 text-white px-3 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-[var(--card-bg)] text-[var(--foreground)] px-3 py-2 rounded-lg border border-[var(--border)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
               >
                 {statusOptions.map(option => (
                   <option key={option.value} value={option.value}>
@@ -159,13 +159,13 @@ export default function FilterSortControls({
 
             {/* Filtro por Avaliação */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                 Avaliação Mínima
               </label>
               <select
                 value={filters.rating}
                 onChange={(e) => setFilters({ ...filters, rating: e.target.value })}
-                className="w-full bg-gray-700 text-white px-3 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-[var(--card-bg)] text-[var(--foreground)] px-3 py-2 rounded-lg border border-[var(--border)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
               >
                 {ratingOptions.map(option => (
                   <option key={option.value} value={option.value}>

@@ -73,12 +73,12 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "lido": return "bg-blue-600 hover:bg-blue-700";
-      case "lendo": return "bg-green-600 hover:bg-green-700";
-      case "quero ler": return "bg-yellow-600 hover:bg-yellow-700";
-      case "pausado": return "bg-orange-600 hover:bg-orange-700";
-      case "abandonado": return "bg-red-600 hover:bg-red-700";
-      default: return "bg-gray-600 hover:bg-gray-700";
+  case "lido": return "bg-[var(--primary)] hover:bg-blue-700";
+  case "lendo": return "bg-green-600 hover:bg-green-700";
+  case "quero ler": return "bg-yellow-600 hover:bg-yellow-700";
+  case "pausado": return "bg-orange-600 hover:bg-orange-700";
+  case "abandonado": return "bg-red-600 hover:bg-red-700";
+  default: return "bg-[var(--card-bg)] hover:bg-[var(--border)]";
     }
   };
 
@@ -94,14 +94,14 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
+  <div className="min-h-screen bg-[var(--background)]">
       {/* Header com navegação */}
-      <div className="bg-gray-800 border-b border-gray-700">
+  <div className="bg-[var(--card-bg)] border-b border-[var(--border)]">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link 
               href="/biblioteca"
-              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+              className="flex items-center gap-2 text-[var(--secondary-text)] hover:text-[var(--foreground)] transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
               Voltar à biblioteca
@@ -110,7 +110,7 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
             <div className="flex items-center gap-2">
               <button
                 onClick={handleShare}
-                className="p-2 text-gray-400 hover:text-white transition-colors"
+                className="p-2 text-[var(--secondary-text)] hover:text-[var(--foreground)] transition-colors"
                 title="Compartilhar"
               >
                 <Share2 className="h-4 w-4" />
@@ -118,7 +118,7 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
               
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center gap-2 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                className="flex items-center gap-2 px-3 py-2 bg-[var(--primary)] hover:bg-purple-700 text-white rounded-lg transition-colors"
               >
                 <Edit className="h-4 w-4" />
                 Editar
@@ -164,7 +164,7 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
               </div>
 
               {/* Status de Leitura */}
-              <div className="bg-gray-800 rounded-lg p-4 mb-6">
+              <div className="bg-[var(--card-bg)] rounded-lg p-4 mb-6">
                 <h3 className="text-sm font-medium text-gray-300 mb-3">Status de Leitura</h3>
                 <div className="grid grid-cols-2 gap-2">
                   {[
@@ -244,11 +244,11 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
               {/* Sinopse */}
               {book.synopsis && (
                 <div>
-                  <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                  <h3 className="text-lg font-semibold text-[var(--foreground)] mb-3 flex items-center gap-2">
                     <FileText className="h-5 w-5" />
                     Sinopse
                   </h3>
-                  <p className="text-gray-300 leading-relaxed">{book.synopsis}</p>
+                  <p className="text-[var(--secondary-text)] leading-relaxed">{book.synopsis}</p>
                 </div>
               )}
             </motion.div>
@@ -288,20 +288,20 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-gray-800 rounded-lg p-6 max-w-md w-full"
+            className="bg-[var(--card-bg)] rounded-lg p-6 max-w-md w-full"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-lg font-semibold text-white mb-4">
+            <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">
               Confirmar Exclusão
             </h3>
-            <p className="text-gray-300 mb-6">
+            <p className="text-[var(--secondary-text)] mb-6">
               Tem certeza que deseja excluir "{book.title}" da sua biblioteca? 
               Esta ação não pode ser desfeita.
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+                className="px-4 py-2 bg-[var(--border)] hover:bg-[var(--primary-hover)] text-[var(--foreground)] rounded-lg transition-colors"
               >
                 Cancelar
               </button>
