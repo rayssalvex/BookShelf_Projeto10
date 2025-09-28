@@ -263,19 +263,19 @@ export default function EnhancedAddBook() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+  <div className="max-w-4xl mx-auto p-6 bg-[var(--background)]">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Adicionar Novo Livro</h1>
-        <p className="text-gray-400">Preencha as informações do livro para adicionar à sua biblioteca</p>
+  <h1 className="text-3xl font-bold text-[var(--foreground)] mb-2">Adicionar Novo Livro</h1>
+  <p className="text-[var(--secondary-text)]">Preencha as informações do livro para adicionar à sua biblioteca</p>
       </div>
 
       {/* Barra de Progresso */}
       <div className="mb-8">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium text-gray-300">Progresso do formulário</span>
-          <span className="text-sm text-gray-400">{progress}%</span>
+          <span className="text-sm font-medium text-[var(--foreground)]">Progresso do formulário</span>
+          <span className="text-sm text-[var(--secondary-text)]">{progress}%</span>
         </div>
-        <div className="w-full bg-gray-700 rounded-full h-2">
+        <div className="w-full bg-[var(--card-bg)] rounded-full h-2">
           <div
             className="h-2 rounded-full bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-300"
             style={{ width: `${progress}%` }}
@@ -296,12 +296,12 @@ export default function EnhancedAddBook() {
           {/* Coluna da Direita - Formulário */}
           <div className="lg:col-span-2 space-y-6">
             {/* Informações Básicas */}
-            <div className="bg-gray-800 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Informações Básicas</h3>
+            <div className="bg-[var(--card-bg)] rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">Informações Básicas</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Título */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                     Título *
                   </label>
                   <div className="relative">
@@ -309,13 +309,13 @@ export default function EnhancedAddBook() {
                       name="titulo"
                       value={formData.titulo}
                       onChange={handleChange}
-                      className={`w-full px-3 py-2 pr-10 bg-gray-700 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors ${
-                        fieldValidations.titulo?.isValid === false
-                          ? 'border-red-500 focus:ring-red-500'
-                          : formData.titulo && fieldValidations.titulo?.isValid
-                          ? 'border-green-500 focus:ring-green-500'
-                          : 'border-gray-600 focus:ring-blue-500'
-                      }`}
+                      className={`w-full px-3 py-2 pr-10 bg-[var(--card-bg)] border rounded-lg text-[var(--foreground)] placeholder-[var(--secondary-text)] focus:outline-none focus:ring-2 transition-colors ${
+                          fieldValidations.titulo?.isValid === false
+                            ? 'border-red-500 focus:ring-red-500'
+                            : formData.titulo && fieldValidations.titulo?.isValid
+                            ? 'border-green-500 focus:ring-green-500'
+                            : 'border-[var(--border)] focus:ring-[var(--primary)]'
+                        }`}
                       placeholder="Digite o título do livro"
                     />
                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -329,7 +329,7 @@ export default function EnhancedAddBook() {
 
                 {/* Autor */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                     Autor *
                   </label>
                   <div className="relative">
@@ -337,13 +337,13 @@ export default function EnhancedAddBook() {
                       name="autor"
                       value={formData.autor}
                       onChange={handleChange}
-                      className={`w-full px-3 py-2 pr-10 bg-gray-700 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors ${
-                        fieldValidations.autor?.isValid === false
-                          ? 'border-red-500 focus:ring-red-500'
-                          : formData.autor && fieldValidations.autor?.isValid
-                          ? 'border-green-500 focus:ring-green-500'
-                          : 'border-gray-600 focus:ring-blue-500'
-                      }`}
+                      className={`w-full px-3 py-2 pr-10 bg-[var(--card-bg)] border rounded-lg text-[var(--foreground)] placeholder-[var(--secondary-text)] focus:outline-none focus:ring-2 transition-colors ${
+                          fieldValidations.autor?.isValid === false
+                            ? 'border-red-500 focus:ring-red-500'
+                            : formData.autor && fieldValidations.autor?.isValid
+                            ? 'border-green-500 focus:ring-green-500'
+                            : 'border-[var(--border)] focus:ring-[var(--primary)]'
+                        }`}
                       placeholder="Nome do autor"
                     />
                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -357,7 +357,7 @@ export default function EnhancedAddBook() {
 
                 {/* Ano */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                     Ano de Publicação
                   </label>
                   <div className="relative">
@@ -368,12 +368,12 @@ export default function EnhancedAddBook() {
                       type="number"
                       min="1000"
                       max={new Date().getFullYear()}
-                      className={`w-full px-3 py-2 pr-10 bg-gray-700 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors ${
+                      className={`w-full px-3 py-2 pr-10 bg-[var(--card-bg)] border rounded-lg text-[var(--foreground)] placeholder-[var(--secondary-text)] focus:outline-none focus:ring-2 transition-colors ${
                         fieldValidations.ano?.isValid === false
                           ? 'border-red-500 focus:ring-red-500'
                           : formData.ano && fieldValidations.ano?.isValid
                           ? 'border-green-500 focus:ring-green-500'
-                          : 'border-gray-600 focus:ring-blue-500'
+                          : 'border-[var(--border)] focus:ring-[var(--primary)]'
                       }`}
                       placeholder="Ex: 2023"
                     />
@@ -388,7 +388,7 @@ export default function EnhancedAddBook() {
 
                 {/* Gênero */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                     Gênero
                   </label>
                   <GenreAutocomplete
@@ -401,12 +401,12 @@ export default function EnhancedAddBook() {
             </div>
 
             {/* Detalhes do Livro */}
-            <div className="bg-gray-800 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Detalhes do Livro</h3>
+            <div className="bg-[var(--card-bg)] rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">Detalhes do Livro</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Páginas */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                     Total de Páginas
                   </label>
                   <div className="relative">
@@ -417,12 +417,12 @@ export default function EnhancedAddBook() {
                       type="number"
                       min="1"
                       max="10000"
-                      className={`w-full px-3 py-2 pr-10 bg-gray-700 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors ${
+                      className={`w-full px-3 py-2 pr-10 bg-[var(--card-bg)] border rounded-lg text-[var(--foreground)] placeholder-[var(--secondary-text)] focus:outline-none focus:ring-2 transition-colors ${
                         fieldValidations.paginas?.isValid === false
                           ? 'border-red-500 focus:ring-red-500'
                           : formData.paginas && fieldValidations.paginas?.isValid
                           ? 'border-green-500 focus:ring-green-500'
-                          : 'border-gray-600 focus:ring-blue-500'
+                          : 'border-[var(--border)] focus:ring-[var(--primary)]'
                       }`}
                       placeholder="Ex: 350"
                     />
@@ -437,7 +437,7 @@ export default function EnhancedAddBook() {
 
                 {/* Página Atual */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                     Página Atual
                   </label>
                   <div className="relative">
@@ -447,12 +447,12 @@ export default function EnhancedAddBook() {
                       onChange={handleChange}
                       type="number"
                       min="0"
-                      className={`w-full px-3 py-2 pr-10 bg-gray-700 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors ${
+                      className={`w-full px-3 py-2 pr-10 bg-[var(--card-bg)] border rounded-lg text-[var(--foreground)] placeholder-[var(--secondary-text)] focus:outline-none focus:ring-2 transition-colors ${
                         fieldValidations.paginaAtual?.isValid === false
                           ? 'border-red-500 focus:ring-red-500'
                           : formData.paginaAtual && fieldValidations.paginaAtual?.isValid
                           ? 'border-green-500 focus:ring-green-500'
-                          : 'border-gray-600 focus:ring-blue-500'
+                          : 'border-[var(--border)] focus:ring-[var(--primary)]'
                       }`}
                       placeholder="Ex: 150"
                     />
@@ -467,14 +467,14 @@ export default function EnhancedAddBook() {
 
                 {/* Status */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                     Status de Leitura
                   </label>
                   <select
                     name="status"
                     value={formData.status}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 bg-[var(--card-bg)] border border-[var(--border)] rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
                   >
                     <option value="">Selecione um status</option>
                     <option value="quero ler">📚 Quero Ler</option>
@@ -487,7 +487,7 @@ export default function EnhancedAddBook() {
 
                 {/* ISBN */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                     ISBN
                   </label>
                   <div className="relative">
@@ -495,13 +495,13 @@ export default function EnhancedAddBook() {
                       name="isbn"
                       value={formData.isbn}
                       onChange={handleChange}
-                      className={`w-full px-3 py-2 pr-10 bg-gray-700 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors ${
-                        fieldValidations.isbn?.isValid === false
-                          ? 'border-red-500 focus:ring-red-500'
-                          : formData.isbn && fieldValidations.isbn?.isValid
-                          ? 'border-green-500 focus:ring-green-500'
-                          : 'border-gray-600 focus:ring-blue-500'
-                      }`}
+                      className={`w-full px-3 py-2 pr-10 bg-[var(--card-bg)] border rounded-lg text-[var(--foreground)] placeholder-[var(--secondary-text)] focus:outline-none focus:ring-2 transition-colors ${
+                          fieldValidations.isbn?.isValid === false
+                            ? 'border-red-500 focus:ring-red-500'
+                            : formData.isbn && fieldValidations.isbn?.isValid
+                            ? 'border-green-500 focus:ring-green-500'
+                            : 'border-[var(--border)] focus:ring-[var(--primary)]'
+                        }`}
                       placeholder="Ex: 978-3-16-148410-0"
                     />
                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -515,7 +515,7 @@ export default function EnhancedAddBook() {
 
                 {/* Avaliação */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                     Sua Avaliação
                   </label>
                   <div className="flex items-center gap-2">
@@ -536,7 +536,7 @@ export default function EnhancedAddBook() {
                       </button>
                     ))}
                     {formData.estrelas > 0 && (
-                      <span className="ml-2 text-sm text-gray-400">
+                      <span className="ml-2 text-sm text-[var(--secondary-text)]">
                         {formData.estrelas} de 5 estrelas
                       </span>
                     )}
@@ -546,12 +546,12 @@ export default function EnhancedAddBook() {
             </div>
 
             {/* Sinopse e Notas */}
-            <div className="bg-gray-800 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Descrição</h3>
+            <div className="bg-[var(--card-bg)] rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">Descrição</h3>
               <div className="space-y-4">
                 {/* Sinopse */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                     Sinopse
                   </label>
                   <textarea
@@ -559,14 +559,14 @@ export default function EnhancedAddBook() {
                     value={formData.sinopse}
                     onChange={handleChange}
                     rows={4}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    className="w-full px-3 py-2 bg-[var(--card-bg)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder-[var(--secondary-text)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent resize-none"
                     placeholder="Descreva brevemente o enredo do livro..."
                   />
                 </div>
 
                 {/* Notas Pessoais */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                     Notas Pessoais
                   </label>
                   <textarea
@@ -574,7 +574,7 @@ export default function EnhancedAddBook() {
                     value={formData.notas}
                     onChange={handleChange}
                     rows={3}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    className="w-full px-3 py-2 bg-[var(--card-bg)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder-[var(--secondary-text)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent resize-none"
                     placeholder="Suas impressões, citações favoritas, etc..."
                   />
                 </div>
@@ -587,8 +587,8 @@ export default function EnhancedAddBook() {
         {mensagem && (
           <div className={`p-4 rounded-lg ${
             mensagem.startsWith("✅") 
-              ? "bg-green-900/50 border border-green-500 text-green-300" 
-              : "bg-red-900/50 border border-red-500 text-red-300"
+              ? "bg-green-100 border border-green-500 text-green-800 dark:bg-green-900/50 dark:text-green-300" 
+              : "bg-red-100 border border-red-500 text-red-800 dark:bg-red-900/50 dark:text-red-300"
           }`}>
             {mensagem}
           </div>
@@ -599,7 +599,7 @@ export default function EnhancedAddBook() {
           <button
             type="submit"
             disabled={isSubmitting || !fieldValidations.titulo?.isValid || !fieldValidations.autor?.isValid}
-            className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-lg transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:bg-[var(--card-bg)] disabled:text-[var(--secondary-text)] disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-lg transition-colors"
           >
             {isSubmitting ? (
               <>
@@ -618,7 +618,7 @@ export default function EnhancedAddBook() {
             type="button"
             onClick={handleReset}
             disabled={isSubmitting}
-            className="flex items-center justify-center gap-2 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-lg transition-colors"
+            className="flex items-center justify-center gap-2 bg-[var(--card-bg)] hover:bg-[var(--primary-hover)] disabled:bg-[var(--card-bg)] disabled:cursor-not-allowed text-[var(--foreground)] font-medium py-3 px-6 rounded-lg transition-colors"
           >
             <RotateCcw className="h-4 w-4" />
             Limpar Formulário

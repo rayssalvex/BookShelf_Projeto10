@@ -118,7 +118,7 @@ export function Dashboard() {
     <div className="space-y-6">
       {/* Estatísticas Gerais */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-none">
+  <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-none">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Total de Livros</CardTitle>
           </CardHeader>
@@ -130,7 +130,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white border-none">
+  <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white border-none">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Páginas Totais</CardTitle>
           </CardHeader>
@@ -142,7 +142,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white border-none">
+  <Card className="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white border-none">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Avaliação Média</CardTitle>
           </CardHeader>
@@ -158,7 +158,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-none">
+  <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-none">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Tempo de Leitura</CardTitle>
           </CardHeader>
@@ -174,10 +174,10 @@ export function Dashboard() {
       {/* Gráficos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Distribuição por Gênero */}
-        <Card className="bg-gray-800 border-gray-700">
+  <Card className="bg-[var(--card-bg)] border-[var(--border)]">
           <CardHeader>
-            <CardTitle className="text-white">Distribuição por Gênero</CardTitle>
-            <CardDescription className="text-gray-400">
+            <CardTitle className="text-[var(--foreground)]">Distribuição por Gênero</CardTitle>
+            <CardDescription className="text-[var(--secondary-text)]">
               Quantidade de livros por categoria
             </CardDescription>
           </CardHeader>
@@ -205,10 +205,10 @@ export function Dashboard() {
         </Card>
 
         {/* Distribuição por Avaliação */}
-        <Card className="bg-gray-800 border-gray-700">
+  <Card className="bg-[var(--card-bg)] border-[var(--border)]">
           <CardHeader>
-            <CardTitle className="text-white">Distribuição por Avaliação</CardTitle>
-            <CardDescription className="text-gray-400">
+            <CardTitle className="text-[var(--foreground)]">Distribuição por Avaliação</CardTitle>
+            <CardDescription className="text-[var(--secondary-text)]">
               Quantidade de livros por nota
             </CardDescription>
           </CardHeader>
@@ -239,10 +239,10 @@ export function Dashboard() {
         </Card>
 
         {/* Livros por Ano */}
-        <Card className="bg-gray-800 border-gray-700 lg:col-span-2">
+  <Card className="bg-[var(--card-bg)] border-[var(--border)] lg:col-span-2">
           <CardHeader>
-            <CardTitle className="text-white">Livros por Ano de Publicação</CardTitle>
-            <CardDescription className="text-gray-400">
+            <CardTitle className="text-[var(--foreground)]">Livros por Ano de Publicação</CardTitle>
+            <CardDescription className="text-[var(--secondary-text)]">
               Distribuição temporal da sua biblioteca
             </CardDescription>
           </CardHeader>
@@ -276,17 +276,17 @@ export function Dashboard() {
 
       {/* Estatísticas Personalizadas */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-gray-800 border-gray-700">
+  <Card className="bg-[var(--card-bg)] border-[var(--border)]">
           <CardHeader>
-            <CardTitle className="text-white text-sm">Livro Mais Antigo</CardTitle>
+            <CardTitle className="text-[var(--foreground)] text-sm">Livro Mais Antigo</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-lg font-semibold text-white">
+            <div className="text-lg font-semibold text-[var(--foreground)]">
               {mockBooks.reduce((oldest, book) => 
                 (book.year && (!oldest.year || book.year < oldest.year)) ? book : oldest
               ).title}
             </div>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-[var(--secondary-text)]">
               {mockBooks.reduce((oldest, book) => 
                 (book.year && (!oldest.year || book.year < oldest.year)) ? book : oldest
               ).year}
@@ -294,17 +294,17 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-800 border-gray-700">
+  <Card className="bg-[var(--card-bg)] border-[var(--border)]">
           <CardHeader>
-            <CardTitle className="text-white text-sm">Livro Mais Longo</CardTitle>
+            <CardTitle className="text-[var(--foreground)] text-sm">Livro Mais Longo</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-lg font-semibold text-white">
+            <div className="text-lg font-semibold text-[var(--foreground)]">
               {mockBooks.reduce((longest, book) => 
                 (book.pages && (!longest.pages || book.pages > longest.pages)) ? book : longest
               ).title}
             </div>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-[var(--secondary-text)]">
               {mockBooks.reduce((longest, book) => 
                 (book.pages && (!longest.pages || book.pages > longest.pages)) ? book : longest
               ).pages} páginas
@@ -312,15 +312,15 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-800 border-gray-700">
+  <Card className="bg-[var(--card-bg)] border-[var(--border)]">
           <CardHeader>
-            <CardTitle className="text-white text-sm">Média de Páginas</CardTitle>
+            <CardTitle className="text-[var(--foreground)] text-sm">Média de Páginas</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-lg font-semibold text-white">
+            <div className="text-lg font-semibold text-[var(--foreground)]">
               {Math.round(stats.totalPages / stats.totalBooks)}
             </div>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-[var(--secondary-text)]">
               páginas por livro
             </p>
           </CardContent>

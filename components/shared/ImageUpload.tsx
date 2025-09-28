@@ -181,12 +181,12 @@ export default function ImageUpload({
           <div className="w-full border-t border-gray-600"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-gray-900 text-gray-400">ou</span>
+          <span className="px-2 mb-7 text-gray-400">OU</span>
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-400 mb-2">
+        <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
           URL da imagem
         </label>
         <input
@@ -198,7 +198,7 @@ export default function ImageUpload({
             setPreviewUrl(url);
             onImageSelect(null, url);
           }}
-          className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 bg-[var(--card-bg)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder-[var(--secondary-text)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
         />
       </div>
     </div>

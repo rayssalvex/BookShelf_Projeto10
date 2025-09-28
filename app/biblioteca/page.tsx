@@ -34,7 +34,7 @@ export default function Biblioteca() {
   return (
     <section className="w-full px-6">
       <div className="mb-6">
-        <h1 className="text-4xl font-bold tracking-tight text-white sm:text-4xl mb-4">
+        <h1 className="text-4xl font-bold tracking-tight text-[var(--foreground)] sm:text-4xl mb-4">
           Minha Biblioteca
         </h1>
         <p className="text-lg text-gray-400 mb-6">

@@ -7,7 +7,7 @@ export default function Home() {
     <section className="w-full space-y-12">
       {/* Dashboard com Estatísticas */}
       <div className="mb-10">
-        <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl mb-2">
+        <h1 className="text-4xl font-bold tracking-tight text-[var(--foreground)] sm:text-5xl mb-2">
           Dashboard da Biblioteca
         </h1>
         <p className="text-lg leading-8 text-[--secondary-text] mb-8">

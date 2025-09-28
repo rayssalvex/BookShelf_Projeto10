@@ -1,76 +1,109 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Monitor } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useState, useRef } from "react";
 
+type ThemeToggleSize = "sm" | "md" | "lg";
 interface ThemeToggleProps {
   className?: string;
-  size?: "sm" | "md" | "lg";
+  size?: ThemeToggleSize;
 }
 
 export default function ThemeToggle({ className = "", size = "md" }: ThemeToggleProps) {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme();
+  const [open, setOpen] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const _size: ThemeToggleSize = size;
 
-  const sizeClasses = {
-    sm: "w-12 h-6",
-    md: "w-14 h-7",
-    lg: "w-16 h-8"
+  const iconSizes: Record<ThemeToggleSize, number> = {
+    sm: 16,
+    md: 20,
+    lg: 24
   };
 
-  const iconSizes = {
-    sm: 12,
-    md: 14,
-    lg: 16
+  const getOptions = (size: ThemeToggleSize) => ([
+    {
+      value: "light",
+      label: "Claro",
+      icon: <Sun size={iconSizes[size]} className="text-yellow-500" />
+    },
+    {
+      value: "dark",
+      label: "Escuro",
+      icon: <Moon size={iconSizes[size]} className="text-blue-400" />
+    },
+    {
+      value: "system",
+      label: "Sistema",
+      icon: <Monitor size={iconSizes[size]} className="text-gray-500" />
+    }
+  ]);
+
+  const options = getOptions(_size);
+  const current = options.find(o => o.value === theme) || options[2];
+  const currentIcon =
+    theme === "system"
+      ? (resolvedTheme === "dark"
+          ? <Moon size={iconSizes[_size]} className="text-blue-400" />
+          : <Sun size={iconSizes[_size]} className="text-yellow-500" />)
+      : current.icon;
+
+  // Fecha dropdown ao perder foco
+  const handleBlur = (e: React.FocusEvent<HTMLButtonElement | HTMLDivElement>) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setOpen(false);
+    }
   };
 
   return (
-    <button
-      onClick={toggleTheme}
-      className={`
-        relative inline-flex items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900
-        ${theme === "dark" 
-          ? "bg-gray-700 hover:bg-gray-600" 
-          : "bg-gray-300 hover:bg-gray-400"
-        }
-        ${sizeClasses[size]}
-        ${className}
-      `}
-      title={`Alternar para modo ${theme === "dark" ? "claro" : "escuro"}`}
+    <div className={`relative inline-block text-left ${className}`}
+      tabIndex={-1}
+      onBlur={handleBlur}
     >
-      {/* Track */}
-      <span className="sr-only">Alternar tema</span>
-      
-      {/* Thumb */}
-      <motion.span
-        className={`
-          inline-block rounded-full shadow-lg transform transition-transform duration-200 ease-in-out
-          ${theme === "dark" 
-            ? "bg-gray-900 text-yellow-400" 
-            : "bg-white text-gray-600"
-          }
-          ${size === "sm" ? "w-5 h-5" : size === "md" ? "w-6 h-6" : "w-7 h-7"}
-        `}
-        animate={{
-          x: theme === "dark" 
-            ? size === "sm" ? 24 : size === "md" ? 28 : 32
-            : 2
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 500,
-          damping: 30
-        }}
+      <button
+        ref={btnRef}
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label="Alternar tema"
+        className={`flex items-center gap-2 rounded-md px-2 py-1 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500
+          text-gray-900 dark:text-gray-100`}
+        onClick={() => setOpen(o => !o)}
       >
-        <div className="flex items-center justify-center w-full h-full">
-          {theme === "dark" ? (
-            <Moon size={iconSizes[size]} />
-          ) : (
-            <Sun size={iconSizes[size]} />
-          )}
+        {theme === "system" ? <Monitor size={iconSizes[size]} /> : currentIcon}
+        <span className="hidden sm:inline text-xs font-medium">
+          {theme === "system" ? "Sistema" : current.label}
+        </span>
+        <span className="ml-1">▼</span>
+      </button>
+      {open && (
+        <div
+          className="absolute z-50 mt-2 w-36 rounded-md bg-[var(--card-bg)] text-[var(--foreground)] shadow-lg ring-1 ring-black/5 focus:outline-none animate-fade-in"
+          role="listbox"
+        >
+          {options.map(opt => (
+            <button
+              key={opt.value}
+              role="option"
+              aria-selected={theme === opt.value}
+              className={`flex items-center w-full gap-2 px-3 py-2 text-sm transition-colors
+                hover:bg-[var(--primary-hover)] hover:text-[var(--foreground)]
+                ${theme === opt.value ? "font-bold bg-[var(--primary-hover)]" : ""}`}
+              onClick={() => {
+                setTheme(opt.value as any);
+                setOpen(false);
+                btnRef.current?.focus();
+              }}
+            >
+              {opt.icon}
+              <span>{opt.label}</span>
+              {theme === opt.value && <span className="ml-auto">✓</span>}
+            </button>
+          ))}
         </div>
-      </motion.span>
-    </button>
+      )}
+    </div>
   );
 }
 
