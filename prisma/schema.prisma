@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Book {
-  id          String   @id
+  id          String   @id @default(uuid())
   title       String
   author      String
   genreId     String
@@ -27,13 +27,14 @@ model Book {
   status      ReadingStatus @default(QUERO_LER)
   currentPage Int      @default(0)
   createdAt   DateTime @default(now())
+  @@index([createdAt])
   updatedAt   DateTime @updatedAt
   isbn        String?  // opcional
   notes       String?  // opcional
 }
 
 model Genre {
-  id    String  @id
+  id    String  @id @default(uuid())
   name  String  @unique
   books Book[]
 }
