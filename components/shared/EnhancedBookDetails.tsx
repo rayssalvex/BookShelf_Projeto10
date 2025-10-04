@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Edit, Trash2, Share2, Bookmark, BookOpen, Calendar, User, Hash, FileText } from "lucide-react";
+import { ArrowLeft, Edit, Trash2, Share2, Bookmark, BookOpen, Calendar, FileText } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Book } from "@/lib/types";
@@ -94,7 +94,58 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
   };
 
   return (
-  <div className="min-h-screen bg-[var(--background)]">
+    <div className="min-h-screen bg-[var(--background)]">
+      {/* Formulário de edição */}
+      {isEditing && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+          <div className="bg-white dark:bg-[var(--card-bg)] rounded-lg p-8 shadow-xl w-full max-w-lg">
+            <h2 className="text-xl font-bold mb-4">Editar Livro</h2>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const form = e.target as HTMLFormElement;
+                const formData = new FormData(form);
+                const payload = {
+                  title: formData.get('title'),
+                  author: formData.get('author'),
+                  coverUrl: formData.get('coverUrl'),
+                  genre: formData.get('genre'),
+                  year: Number(formData.get('year')),
+                  pages: Number(formData.get('pages')),
+                  rating: Number(formData.get('rating')),
+                  synopsis: formData.get('synopsis'),
+                };
+                // Chama API PUT
+                const res = await fetch(`/api/books/${book.id}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload),
+                });
+                if (res.ok) {
+                  setIsEditing(false);
+                  window.location.reload();
+                } else {
+                  alert('Erro ao salvar alterações.');
+                }
+              }}
+              className="space-y-4"
+            >
+              <input name="title" defaultValue={book.title} className="w-full px-3 py-2 border rounded" placeholder="Título" />
+              <input name="author" defaultValue={book.author} className="w-full px-3 py-2 border rounded" placeholder="Autor" />
+              <input name="coverUrl" defaultValue={book.coverUrl} className="w-full px-3 py-2 border rounded" placeholder="URL da capa" />
+              <input name="genre" defaultValue={typeof book.genre === 'object' && book.genre !== null ? book.genre.name : book.genre} className="w-full px-3 py-2 border rounded" placeholder="Gênero" />
+              <input name="year" type="number" defaultValue={book.year} className="w-full px-3 py-2 border rounded" placeholder="Ano" />
+              <input name="pages" type="number" defaultValue={book.pages} className="w-full px-3 py-2 border rounded" placeholder="Páginas" />
+              <input name="rating" type="number" min={1} max={5} defaultValue={book.rating} className="w-full px-3 py-2 border rounded" placeholder="Avaliação (1-5)" />
+              <textarea name="synopsis" defaultValue={book.synopsis} className="w-full px-3 py-2 border rounded" placeholder="Sinopse" />
+              <div className="flex gap-4 pt-2">
+                <button type="submit" className="bg-[var(--primary)] text-white px-4 py-2 rounded">Salvar</button>
+                <button type="button" onClick={() => setIsEditing(false)} className="bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-4 py-2 rounded">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
       {/* Header com navegação */}
   <div className="bg-[var(--card-bg)] border-b border-[var(--border)]">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -223,7 +274,7 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
                 {book.genre && (
                   <div className="flex items-center gap-2 text-gray-400">
                     <Bookmark className="h-4 w-4" />
-                    <span className="text-sm">{book.genre}</span>
+                    <span className="text-sm">{typeof book.genre === 'object' && book.genre !== null ? book.genre.name : book.genre}</span>
                   </div>
                 )}
                 
@@ -285,38 +336,34 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
           onClick={() => setShowDeleteConfirm(false)}
         >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-[var(--card-bg)] rounded-lg p-6 max-w-md w-full"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">
-              Confirmar Exclusão
-            </h3>
-            <p className="text-[var(--secondary-text)] mb-6">
-              Tem certeza que deseja excluir "{book.title}" da sua biblioteca? 
-              Esta ação não pode ser desfeita.
-            </p>
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 bg-[var(--border)] hover:bg-[var(--primary-hover)] text-[var(--foreground)] rounded-lg transition-colors"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={() => {
-                  
-                  console.log(`Excluindo livro: ${book.title}`);
-                  setShowDeleteConfirm(false);
-                }}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-              >
-                Excluir
-              </button>
+          <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+            <div className="bg-white dark:bg-[var(--card-bg)] rounded-lg p-8 shadow-xl w-full max-w-lg">
+              <h2 className="text-xl font-bold mb-4 text-red-600">Excluir Livro</h2>
+              <p className="mb-6">Tem certeza que deseja excluir "{book.title}" da sua biblioteca?</p>
+              <div className="flex gap-4">
+                <button
+                  className="bg-red-600 text-white px-4 py-2 rounded"
+                  onClick={() => setShowDeleteConfirm(false)}
+                >
+                  Cancelar
+                </button>
+                <button
+                  className="bg-[var(--primary)] text-white px-4 py-2 rounded"
+                  onClick={async () => {
+                    const res = await fetch(`/api/books/${book.id}`, { method: 'DELETE' });
+                    if (res.ok) {
+                      setShowDeleteConfirm(false);
+                      window.location.href = '/biblioteca';
+                    } else {
+                      alert('Erro ao excluir livro.');
+                    }
+                  }}
+                >
+                  Excluir
+                </button>
+              </div>
             </div>
-          </motion.div>
+          </div>
         </motion.div>
       )}
     </div>

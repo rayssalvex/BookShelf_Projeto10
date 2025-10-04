@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { mockBooks } from '@/data/mockBooks';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 // --- GET (Obter um livro específico) ---
 export async function GET(
@@ -7,17 +8,23 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const bookId = params.id;
-    const book = mockBooks.find((b) => b.id === bookId);
-
+    const url = new URL(request.url);
+    const bookId = url.pathname.split('/').pop();
+    console.log('GET bookId:', bookId);
+    if (!bookId) {
+      return NextResponse.json({ message: 'ID do livro inválido.' }, { status: 400 });
+    }
+    const book = await prisma.book.findUnique({
+      where: { id: bookId },
+      include: { genre: true },
+    });
     if (!book) {
       return NextResponse.json({ message: 'Livro não encontrado.' }, { status: 404 });
     }
-
     return NextResponse.json(book);
   } catch (error) {
     return NextResponse.json(
-      { message: 'Ocorreu um erro ao buscar o livro.' },
+      { message: 'Ocorreu um erro ao buscar o livro.', error: String(error) },
       { status: 500 }
     );
   }
@@ -29,23 +36,33 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const bookId = params.id;
-    const bookIndex = mockBooks.findIndex((b) => b.id === bookId);
-
-    if (bookIndex === -1) {
-      return NextResponse.json({ message: 'Livro não encontrado.' }, { status: 404 });
+    const url = new URL(request.url);
+    const bookId = url.pathname.split('/').pop();
+    console.log('PUT bookId:', bookId);
+    if (!bookId) {
+      return NextResponse.json({ message: 'ID do livro inválido.' }, { status: 400 });
     }
-
-    const updatedData = await request.json();
-    mockBooks[bookIndex] = { ...mockBooks[bookIndex], ...updatedData };
-
+  const updatedData = await request.json();
+  console.log('PUT updatedData:', updatedData);
+    const { genre, ...rest } = updatedData;
+    let data = rest;
+    if (genre) {
+      data = {
+        ...rest,
+        genre: { connect: { name: genre } }
+      };
+    }
+    const updatedBook = await prisma.book.update({
+      where: { id: bookId },
+      data,
+    });
     return NextResponse.json({ 
       message: 'Livro atualizado com sucesso!', 
-      book: mockBooks[bookIndex] 
+      book: updatedBook 
     });
   } catch (error) {
     return NextResponse.json(
-      { message: 'Erro ao atualizar o livro. Verifique os dados enviados.' },
+      { message: 'Erro ao atualizar o livro.', error: String(error) },
       { status: 400 }
     );
   }
@@ -57,23 +74,22 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const bookId = params.id;
-    const bookIndex = mockBooks.findIndex((b) => b.id === bookId);
-
-    if (bookIndex === -1) {
-      return NextResponse.json({ message: 'Livro não encontrado.' }, { status: 404 });
+    const url = new URL(request.url);
+    const bookId = url.pathname.split('/').pop();
+    console.log('DELETE bookId:', bookId);
+    if (!bookId) {
+      return NextResponse.json({ message: 'ID do livro inválido.' }, { status: 400 });
     }
-
-    // Remove o livro da lista
-    const [deletedBook] = mockBooks.splice(bookIndex, 1);
-
+    const deletedBook = await prisma.book.delete({
+      where: { id: bookId },
+    });
     return NextResponse.json({ 
       message: 'Livro removido com sucesso!',
       book: deletedBook
     });
   } catch (error) {
     return NextResponse.json(
-      { message: 'Ocorreu um erro ao remover o livro.' },
+      { message: 'Ocorreu um erro ao remover o livro.', error: String(error) },
       { status: 500 }
     );
   }

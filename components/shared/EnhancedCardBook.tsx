@@ -96,7 +96,10 @@ function Card({
         </div>
 
         <span className="inline-block w-fit px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">
-          {highlightSearchTerm(book.genre || "", searchTerm)}
+          {highlightSearchTerm(
+            typeof book.genre === "object" && book.genre !== null ? book.genre.name : (book.genre || ""),
+            searchTerm
+          )}
         </span>
 
         {/* Status Badge */}
@@ -183,9 +186,20 @@ function Card({
 }
 
 export default function EnhancedCardBook({ searchTerm, filters, sort }: EnhancedCardBookProps) {
+  const [books, setBooks] = useState<any[]>([]);
   const [bookStatus, setBookStatus] = useState<BookStatus>({});
 
   useEffect(() => {
+    async function fetchBooks() {
+      try {
+        const res = await fetch("/api/books");
+        const data = await res.json();
+        setBooks(data);
+      } catch (e) {
+        console.error("Erro ao buscar livros da API", e);
+      }
+    }
+    fetchBooks();
     try {
       const savedStatus = localStorage.getItem("bookStatus");
       if (savedStatus) {
@@ -215,7 +229,7 @@ export default function EnhancedCardBook({ searchTerm, filters, sort }: Enhanced
   };
 
   // Filtrar livros
-  const filteredBooks = mockBooks.filter((book) => {
+  const filteredBooks = books.filter((book) => {
     // Filtro de busca
     const term = searchTerm.toLowerCase();
     const matchesSearch = !term || (
@@ -264,10 +278,10 @@ export default function EnhancedCardBook({ searchTerm, filters, sort }: Enhanced
   });
 
   const counts = {
-    total: mockBooks.length,
-    lido: mockBooks.filter((book) => bookStatus[book.id] === "lido").length,
-    lendo: mockBooks.filter((book) => bookStatus[book.id] === "lendo").length,
-    queroLer: mockBooks.filter((book) => bookStatus[book.id] === "quero ler").length,
+    total: books.length,
+    lido: books.filter((book) => bookStatus[book.id] === "lido").length,
+    lendo: books.filter((book) => bookStatus[book.id] === "lendo").length,
+    queroLer: books.filter((book) => bookStatus[book.id] === "quero ler").length,
   };
 
   return (
@@ -277,7 +291,7 @@ export default function EnhancedCardBook({ searchTerm, filters, sort }: Enhanced
       {/* Resultados da busca */}
       {searchTerm && (
         <div className="mb-4 text-sm text-gray-400">
-          {filteredBooks.length} resultado(s) encontrado(s) para "{searchTerm}"
+          {filteredBooks.length} resultado(s) encontrado(s) para &quot;{searchTerm}&quot;
         </div>
       )}
 

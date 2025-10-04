@@ -5,7 +5,7 @@ export interface Book {
   title: string; // Obrigatório
   author: string; // Obrigatório
   coverUrl: string; // URL da capa
-  genre?: string;
+  genre?: string | { id: string; name: string };
   year?: number;
   pages?: number;
   rating?: number; // 1-5

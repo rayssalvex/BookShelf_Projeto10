@@ -183,47 +183,49 @@ export default function EnhancedAddBook() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
     // Verificar se campos obrigatórios são válidos
     const requiredFieldsValid = fieldValidations.titulo?.isValid && fieldValidations.autor?.isValid;
-    
     if (!requiredFieldsValid) {
       setMensagem("❌ Por favor, corrija os erros nos campos obrigatórios.");
       return;
     }
-
     setIsSubmitting(true);
     setMensagem("");
-
     try {
-      // Simular upload de imagem se houver arquivo
       let finalImageUrl = formData.urlCapa;
       if (selectedFile) {
-        // Aqui você faria o upload real para um serviço como AWS S3, Cloudinary, etc.
-        // Por enquanto, mantemos a URL do preview
+        // Upload real de imagem (futuro)
         console.log("Arquivo para upload:", selectedFile);
       }
-
+      // Monta payload para API
       const payload = {
-        ...formData,
-        urlCapa: finalImageUrl,
-        paginas: formData.paginas ? Number(formData.paginas) : undefined,
-        paginaAtual: formData.paginaAtual ? Number(formData.paginaAtual) : undefined,
-        ano: formData.ano ? Number(formData.ano) : undefined,
+        title: formData.titulo,
+        author: formData.autor,
+        year: formData.ano ? Number(formData.ano) : undefined,
+        pages: formData.paginas ? Number(formData.paginas) : undefined,
+        currentPage: formData.paginaAtual ? Number(formData.paginaAtual) : 0,
+        status: formData.status || "QUERO_LER",
+        isbn: formData.isbn || null,
+        notes: formData.notas || null,
+        coverUrl: finalImageUrl,
+        genre: formData.genero,
+        rating: formData.estrelas ? Number(formData.estrelas) : 0,
+        synopsis: formData.sinopse || "",
       };
-
-      console.log("Dados para salvar:", payload);
-      
-      // Simular delay de API
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      setMensagem("✅ Livro adicionado com sucesso!");
-      
-      // Reset form after success
-      setTimeout(() => {
-        handleReset();
-      }, 2000);
-
+      // Chama API para salvar
+      const res = await fetch("/api/books", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        setMensagem("✅ Livro adicionado com sucesso!");
+        setTimeout(() => {
+          handleReset();
+        }, 2000);
+      } else {
+        setMensagem("❌ Erro ao adicionar livro.");
+      }
     } catch (error) {
       setMensagem("❌ Erro ao adicionar livro. Tente novamente.");
     } finally {
