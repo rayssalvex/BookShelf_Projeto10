@@ -1,3 +1,4 @@
+// app/biblioteca/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -5,6 +6,10 @@ import EnhancedSearchBar from "../../components/shared/EnhancedSearchBar";
 import EnhancedCardBook from "../../components/shared/EnhancedCardBook";
 import FilterSortControls, { FilterOptions, SortOptions } from "../../components/shared/FilterSortControls";
 import { useAuth } from "@/contexts/AuthContext";
+import { Prisma } from '@prisma/client'; // Importar tipos do Prisma
+
+// Usar o tipo do Prisma para garantir consistência
+type BookWithGenre = Prisma.BookGetPayload<{ include: { genre: true } }>;
 
 export default function Biblioteca() {
   const { user } = useAuth();
@@ -19,19 +24,15 @@ export default function Biblioteca() {
     direction: "asc",
   });
 
-  const userBooks = user?.books || [];
+  const userBooks: BookWithGenre[] = user?.books || [];
 
-  // Obter gêneros únicos dos livros
+  // CORREÇÃO 2: Obter gêneros únicos dos objetos de livro
   const availableGenres = Array.from(
-    new Set(userBooks.map(book => book.genre).filter(Boolean))
-  ).sort() as string[];
+    new Set(userBooks.map(book => book.genre.name).filter(Boolean))
+  ).sort();
 
   const resetFilters = () => {
-    setFilters({
-      genre: "",
-      status: "",
-      rating: "",
-    });
+    setFilters({ genre: "", status: "", rating: "" });
   };
 
   return (
@@ -44,16 +45,15 @@ export default function Biblioteca() {
           Gerencie sua coleção de livros com busca avançada, filtros e ordenação.
         </p>
         
-        {/* Barra de Busca Aprimorada */}
         <div className="mb-6">
+          {/* CORREÇÃO 1: Passando a prop 'onSearch' em vez de 'setSearchTerm' */}
           <EnhancedSearchBar 
-            searchTerm={searchTerm} 
-            setSearchTerm={setSearchTerm}
-            placeholder="Buscar por título, autor, gênero, ano, páginas..."
+            onSearch={setSearchTerm}
+            initialValue={searchTerm}
+            placeholder="Buscar por título, autor, gênero..."
           />
         </div>
 
-        {/* Controles de Filtro e Ordenação */}
         <FilterSortControls
           filters={filters}
           setFilters={setFilters}
@@ -64,7 +64,6 @@ export default function Biblioteca() {
         />
       </div>
 
-      {/* Cards dos Livros */}
       <EnhancedCardBook 
         searchTerm={searchTerm}
         filters={filters}
