@@ -1,62 +1,27 @@
-"use client";
+// app/livro/[id]/page.tsx
 
-import { useAuth } from "@/contexts/AuthContext";
-import { mockBooks } from "@/data/mockBooks";
-import { notFound } from "next/navigation";
-import EnhancedBookDetails from "@/components/shared/EnhancedBookDetails";
-import { useEffect, useState, use } from "react";
-import { Book } from "@/lib/types";
+import { prisma } from '@/lib/prisma';
+import { notFound } from 'next/navigation';
+import EnhancedBookDetails from '@/components/shared/EnhancedBookDetails';
 
-export default function BookDetailsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { user } = useAuth();
-  const [book, setBook] = useState<Book | null>(null);
-  const [loading, setLoading] = useState(true);
-  const resolvedParams = use(params);
+// 1. A PÁGINA AGORA É UM SERVER COMPONENT 'ASYNC'
+export default async function BookDetailsPage({ params }: { params: { id: string } }) {
+  
+  // 2. BUSCA O LIVRO DIRETAMENTE DO BANCO USANDO PRISMA
+  const book = await prisma.book.findUnique({
+    where: {
+      id: params.id,
+    },
+    include: {
+      genre: true, // Inclui os dados do gênero para exibir na página
+    },
+  });
 
-  useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
-
-    // Primeiro, tenta encontrar o livro nos livros do usuário (IDs prefixados)
-    let foundBook = user.books?.find((b) => b.id === resolvedParams.id);
-    
-    // Se não encontrar, tenta encontrar pelo ID original (sem prefixo)
-    if (!foundBook) {
-      // Extrai o ID original removendo o prefixo do usuário
-      const originalId = resolvedParams.id.includes('_') ? resolvedParams.id.split('_')[1] : resolvedParams.id;
-      foundBook = user.books?.find((b) => b.id.endsWith(`_${originalId}`));
-    }
-    
-    // Se ainda não encontrar, usa o mockBooks como fallback
-    if (!foundBook) {
-      const originalId = resolvedParams.id.includes('_') ? resolvedParams.id.split('_')[1] : resolvedParams.id;
-      foundBook = mockBooks.find((b) => b.id === originalId);
-    }
-
-    setBook(foundBook || null);
-    setLoading(false);
-  }, [user, resolvedParams.id]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-600"></div>
-          <p className="mt-4 text-[var(--foreground)]">Carregando livro...</p>
-        </div>
-      </div>
-    );
-  }
-
+  // 3. SE O LIVRO NÃO EXISTIR NO BANCO, MOSTRA A PÁGINA 404
   if (!book) {
     notFound();
   }
 
+  // 4. SE ENCONTRAR, RENDERIZA O COMPONENTE DE DETALHES PASSANDO O LIVRO
   return <EnhancedBookDetails book={book} />;
 }

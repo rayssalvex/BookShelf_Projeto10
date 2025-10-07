@@ -238,9 +238,8 @@ export default function GutenbergSearch({ onBookSelect }: GutenbergSearchProps) 
 
     try {
       // API do Project Gutenberg
-      const response = await fetch(
-        `https://gutendex.com/books?search=${encodeURIComponent(searchTerm)}&page_size=10`
-      );
+      // CÓDIGO CORRIGIDO
+      const response = await fetch(`https://gutendex.com/books?search=${encodeURIComponent(searchTerm)}&page_size=10`);
 
       if (!response.ok) {
         throw new Error("Erro ao buscar livros");

@@ -33,12 +33,12 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
   
   // Estaado para guardar a lista de todos sos gêneros
   const [editedBook, setEditedBook] = useState({
-    title: book.title,
-    author: book.author,
-    genreId: book.genre.id,
-    year: book.year || 0,
-    pages: book.pages || 0,
-    synopsis: book.synopsis || ''
+    title : book.title,
+    author : book.author,
+    genreId : book.genre.id,
+    year : book.year || 0,
+    pages : book.pages || 0,
+    synopsis : book.synopsis || ''
   });
 
   // useEffect para buscar os gênros da API quando o modal da edição abre
@@ -107,27 +107,31 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
   const handleSaveEdit = async () => {
   if (!user) return;
   setSaveLoading(true);
-  
-  // PREPARA OS DADOS COM OS TIPOS CORRETOS
+
   try {
+    // 1. GARANTE QUE TODOS OS CAMPOS, INCLUINDO genreId, ESTÃO NO PAYLOAD
+    // E QUE OS TIPOS NUMÉRICOS ESTÃO CORRETOS
     const payload = {
-      ...editedBook,
-      year: parseInt(String(editedBook.year), 10),     // Garante que 'year' é um número
-      pages: parseInt(String(editedBook.pages), 10),   // Garante que 'pages' é um número
+      title: editedBook.title,
+      author: editedBook.author,
+      synopsis: editedBook.synopsis,
+      genreId: editedBook.genreId, // <-- Adicionado o genreId ao payload
+      year: parseInt(String(editedBook.year), 10),
+      pages: parseInt(String(editedBook.pages), 10),
     };
 
+    // 2. CORREÇÃO DA SINTAXE DA URL com crase (`)
     const response = await fetch(`/api/books/${book.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload), // Envia o payload com os tipos corrigidos
+      body: JSON.stringify(payload),
     });
 
     if (response.ok) {
       setIsEditing(false);
       window.location.reload();
     } else {
-      // Pega a mensagem de erro da API para nos ajudar a depurar se algo mais der errado
-      const errorData = await response.json();
+      const errorData = await response.json().catch(() => ({ message: "A API retornou um erro sem corpo JSON." }));
       console.error("API Error:", errorData);
       throw new Error(errorData.message || 'API error on update');
     }
@@ -491,47 +495,6 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
                 <button onClick={handleCancelEdit} className="px-6 py-3 bg-[var(--card-bg)] rounded-lg hover:bg-[var(--border)] font-medium border border-[var(--border)]">Cancelar</button>
                 <button onClick={handleSaveEdit} disabled={saveLoading} className="px-6 py-3 bg-[var(--primary)] rounded-lg hover:bg-[var(--primary-hover)] font-medium disabled:opacity-50">
                   {saveLoading ? 'Salvando...' : 'Salvar Alterações'}
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-
-        {/* Modal de Confirmação de Exclusão */}
-        {showDeleteConfirm && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-            onClick={() => !deleteLoading && setShowDeleteConfirm(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="bg-[var(--card-bg)] rounded-lg p-6 max-w-md w-full"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">
-                Confirmar Exclusão
-              </h3>
-              <p className="text-[var(--secondary-text)] mb-6">
-                Tem certeza que deseja excluir &quot;{book.title}&quot; da sua biblioteca? 
-                Esta ação não pode ser desfeita.
-              </p>
-              <div className="flex gap-3 justify-end">
-                <button
-                  onClick={() => !deleteLoading && setShowDeleteConfirm(false)}
-                  disabled={deleteLoading}
-                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleDeleteBook}
-                  disabled={deleteLoading}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {deleteLoading ? 'Excluindo...' : 'Excluir'}
                 </button>
               </div>
             </motion.div>
