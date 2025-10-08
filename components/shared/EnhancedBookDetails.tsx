@@ -161,63 +161,22 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
 
   const handleDeleteBook = async () => {
     if (!user) return;
-    
     setDeleteLoading(true);
-    
     try {
-      // Chamar API para deletar o livro
-      const response = await fetch(`/api/books/${book.id}?userId=${user.id}`, {
+      const response = await fetch(`/api/books/${book.id}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
-        // Sucesso na API - atualizar estado
-        const updatedBooks = user.books.filter(b => b.id !== book.id);
-        const updatedUser = { ...user, books: updatedBooks };
-        
-        // Atualizar localStorage
-        localStorage.setItem('bookshelf-user-v2', JSON.stringify(updatedUser));
-        
-        // Atualizar o contexto de autenticação
         if (updateUserBooks) {
+          const updatedBooks = user.books.filter(b => b.id !== book.id);
           updateUserBooks(updatedBooks);
         }
-        
         setShowDeleteConfirm(false);
-        
-        // Aguardar um momento para o contexto ser atualizado e usar navegação forçada
-        setTimeout(() => {
-          window.location.href = '/biblioteca';
-        }, 100);
-      } else if (response.status === 404) {
-        // Livro não encontrado na API, mas existe no localStorage
-        // Isto pode acontecer com livros adicionados recentemente
-        // Vamos fazer a exclusão apenas no localStorage
-        console.warn('Livro não encontrado na API, removendo apenas do localStorage');
-        
-        const updatedBooks = user.books.filter(b => b.id !== book.id);
-        const updatedUser = { ...user, books: updatedBooks };
-        
-        // Atualizar localStorage
-        localStorage.setItem('bookshelf-user-v2', JSON.stringify(updatedUser));
-        
-        // Atualizar o contexto de autenticação
-        if (updateUserBooks) {
-          updateUserBooks(updatedBooks);
-        }
-        
-        setShowDeleteConfirm(false);
-        
-        // Aguardar um momento para o contexto ser atualizado e usar navegação forçada
-        setTimeout(() => {
-          window.location.href = '/biblioteca';
-        }, 100);
+        window.location.href = '/biblioteca';
       } else {
-        const errorData = await response.json().catch(() => ({ message: 'Erro desconhecido' }));
-        console.error('Erro da API:', errorData);
-        throw new Error(errorData.message || 'Erro na API');
+        throw new Error('API error on delete');
       }
-      
     } catch (error) {
       console.error('Erro ao excluir livro:', error);
       alert('Erro ao excluir livro. Tente novamente.');
@@ -250,46 +209,26 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
-        {/* Header com navegação */}
-        <div className="bg-[var(--card-bg)] border-b border-[var(--border)]">
-          <div className="max-w-7xl mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <Link 
-                href="/biblioteca"
-                className="flex items-center gap-2 text-[var(--secondary-text)] hover:text-[var(--foreground)] transition-colors"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Voltar à biblioteca
-              </Link>
-              
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handleShare}
-                  className="p-2 text-[var(--secondary-text)] hover:text-[var(--foreground)] transition-colors"
-                  title="Compartilhar"
-                >
-                  <Share2 className="h-4 w-4" />
-                </button>
-                
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="flex items-center gap-2 px-3 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--foreground)] rounded-lg transition-colors"
-                >
-                  <Edit className="h-4 w-4" />
-                  Editar
-                </button>
-                
-                <button
-                  onClick={() => setShowDeleteConfirm(true)}
-                  className="p-2 text-red-400 hover:text-red-300 transition-colors"
-                  title="Excluir livro"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </div>
+      {/* Header com botões Editar e Excluir */}
+      <div className="bg-[var(--card-bg)] border-b border-[var(--border)]">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/biblioteca" className="flex items-center gap-2 text-[var(--secondary-text)] hover:text-[var(--foreground)]">
+              <ArrowLeft className="h-4 w-4" />
+              Voltar à biblioteca
+            </Link>
+            <div className="flex items-center gap-2">
+              <button onClick={() => setIsEditing(true)} className="flex items-center gap-2 px-3 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] rounded-lg">
+                <Edit className="h-4 w-4" />
+                Editar
+              </button>
+              <button onClick={() => setShowDeleteConfirm(true)} className="p-2 text-red-400 hover:text-red-300">
+                <Trash2 className="h-4 w-4" />
+              </button>
             </div>
           </div>
         </div>
+      </div>
 
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -432,6 +371,30 @@ export default function EnhancedBookDetails({ book }: EnhancedBookDetailsProps) 
             </div>
           </div>
         </div>
+        {/* --- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO CORRIGIDO --- */}
+        {showDeleteConfirm && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => !deleteLoading && setShowDeleteConfirm(false)}>
+            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-[var(--card-bg)] rounded-lg p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+              <h3 className="text-lg font-semibold mb-4">Confirmar Exclusão</h3>
+              <p className="text-[var(--secondary-text)] mb-6">
+                Tem certeza que deseja excluir "{book.title}"? Esta ação não pode ser desfeita.
+              </p>
+              <div className="flex gap-3 justify-end">
+                <button onClick={() => !deleteLoading && setShowDeleteConfirm(false)} className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">
+                  Cancelar
+                </button>
+                {/* ESTE É O BOTÃO QUE ESTAVA FALTANDO CONECTAR */}
+                <button
+                  onClick={handleDeleteBook}
+                  disabled={deleteLoading}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg disabled:opacity-50"
+                >
+                  {deleteLoading ? 'Excluindo...' : 'Excluir'}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
 
         {/* Modal de Edição */}
         {isEditing && (
