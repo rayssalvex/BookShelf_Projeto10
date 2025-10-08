@@ -1,3 +1,4 @@
+import { Genre } from "@prisma/client";
 
 // lib/types.ts
 export interface Book {
@@ -5,11 +6,12 @@ export interface Book {
   title: string; // Obrigatório
   author: string; // Obrigatório
   coverUrl: string; // URL da capa
-  genre?: string;
   year?: number;
   pages?: number;
   rating?: number; // 1-5
   synopsis?: string;
+  status: string;
+  genre: Genre; // "LIDO", "LENDO", "QUERO_LER", "PAUSADO", "ABANDONADO"
   userId?: string; // ID do usuário proprietário
   // Adicione outros campos do PDF conforme necessário
 }
